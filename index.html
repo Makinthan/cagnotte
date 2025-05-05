@@ -13,7 +13,7 @@
     </button>  
     <h1>🎉 Cadeau pour l'anniversaire de Jen 🎂</h1>
     <p id="description"> Coucou tout le monde ! Pour les 27 ans de Jen, elle a souhaité avoir un nouveau sac (et oui encore 😅).<br />
-      Donc comme l'année dernière je fais une cagnotte (je récupère tout psq flemme de payer des frais aux plateformes) comme ça on peut le lui offrir (je compléterais le reste).
+      Donc comme l'année dernière je fais une cagnotte (je récupère tout psq flemme de payer des frais aux plateformes) comme ça on peut le lui offrir.
       Vous pourrez suivre l'avancé de la cagnotte ici et la liste des participants (mp moi si problème)<br /><br />
       Merci à tous pour votre participation 😁</p>
     <p>Model du sac : <a  href = "https://www.bhv.fr/p/sac+a+main+hobo+courage+28+en+cuir-coach/10179578/60" target="_blank"> Sac COACH</a><br />
@@ -27,7 +27,7 @@
         <div id="progress-bar"></div>
       </div>
       <p id="objectif-text">Objectif : 350 €</p>
-      <button class="participer" onclick="afficherPopup()">💖 Je participe</button>
+      <button class="participer" onclick="afficherPopup()">🎁 Je participe</button>
       <!-- Zone de texte des participants -->
       <div id="participants-section">
         <h3>Participants</h3>
@@ -52,8 +52,9 @@
         </div>
         <div>
           <h3>Ou via Wero</h3>
+          <p id ="warning"> ⚠️ Bien vérifier que mon nom s'affiche une fois le numéro entré</p>
           <p>
-            📱 <span id="numero">06 12 34 56 78</span>
+            📱 <span id="numero">06 52 42 87 77</span>
             <button class="copy-button" onclick="copierNumero()">Copier</button>
           </p>
         </div>
@@ -68,7 +69,7 @@
     /*************/
     const OBJECTIF = 350;
     function mettreAJourProgressBar(montant) {
-      const OBJECTIF = 500; // ou la valeur que tu veux
+      // const OBJECTIF = 500; // ou la valeur que tu veux
       const pourcentage = Math.min((parseFloat(montant) / OBJECTIF) * 100, 100);
       document.getElementById("progress-bar").style.width = pourcentage + "%";
     }
