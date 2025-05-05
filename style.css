@@ -1,0 +1,219 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #e3f2fd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#description {
+  font-size: 1em;
+  color: #000000;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.container {
+  position: relative;
+  max-width: 800px;
+  margin: auto;
+  padding: 40px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style commun aux boutons admin */
+.admin-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  margin-left: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+#logoutBtn {
+  right: 140px; /* pour éviter la superposition avec #adminBtn */
+}
+
+.admin-btn:hover {
+  background-color: #1565c0;
+}
+
+.cagnotte {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+#montant {
+  font-size: 1.5rem;
+  width: 100px;
+  text-align: center;
+  border: none;
+  background: #f1f1f1;
+  border-radius: 6px;
+  padding: 5px;
+}
+
+.participer {
+  background-color: #ff4081;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.participer:hover {
+  background-color: #f50057;
+}
+
+#infos {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  gap: 40px;
+}
+
+.qr {
+  width: 150px;
+  height: 150px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+/* Pop-up style */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-content {
+  background: linear-gradient(135deg, #fce4ec, #e3f2fd);
+  padding: 30px;
+  border-radius: 10px;
+  width: 75vw;
+  height: 75vh;
+  position: relative;
+  text-align: center;
+  overflow-y: auto;
+  box-sizing: border-box;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Animation d'ouverture */
+@keyframes fadeIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.paiement p {
+  font-size: 1.2rem;
+  margin: 10px 0;
+}
+
+/* Copier le bouton */
+.copy-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  background-color: #1976d2;
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.paiement {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 30px;
+  gap: 40px;
+  flex-wrap: wrap;
+  height: 100%;
+}
+
+.qr {
+  width: 300px;
+  height: 300px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+#progress-container {
+  width: 100%;
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+#progress-bar {
+  height: 100%;
+  background-color: #4caf50;
+  width: 0%;
+  transition: width 0.5s ease-in-out;
+}
+
+#objectif-text {
+  margin-bottom: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+#participants-section {
+  margin-top: 30px;
+  text-align: center;
+}
+
+#participants {
+  text-align: center;
+  width: 100%;
+  height: 150px;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  resize: vertical;
+  border: 1px solid #ccc;
+}
+
+#participants[readonly] {
+  background-color: #f4f4f4;
+  color: #333;
+  border: 1px solid #ccc;
+  cursor: default;
+}
+
+
+

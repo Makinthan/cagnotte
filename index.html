@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Cagnotte Anniversaire</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <button class="admin-btn" onclick="afficherAdmin()">🔑 Accès admin</button>
+    <button id="logoutBtn" class="admin-btn" onclick="deconnexionAdmin()" style="display: none;">
+      🚪 Déconnexion
+    </button>  
+    <h1>🎉 Cadeau pour l'anniversaire de Jen 🎂</h1>
+    <p id="description"> Coucou tout le monde ! Pour les 27 ans de Jen, elle a souhaité avoir un nouveau sac (et oui encore 😅).<br />
+      Donc comme l'année dernière je fais une cagnotte (je récupère tout psq flemme de payer des frais aux plateformes) comme ça on peut le lui offrir.
+      Vous pourrez suivre l'avancé de la cagnotte ici et la liste des participants (mp moi si problème)
+      Merci à tous pour votre participation 😁</p>
+    <h2>
+      Montant récolté : <input id="montant" type="text" readonly> €
+      <button id="editBtn" onclick="modifierMontant()" style="display: none;">✏️</button>
+    </h2>
+   
+      <div id="progress-container">
+        <div id="progress-bar"></div>
+      </div>
+      <p id="objectif-text">Objectif : 500 €</p>
+      <button class="participer" onclick="afficherPopup()">💖 Je participe</button>
+      <!-- Zone de texte des participants -->
+      <div id="participants-section">
+        <h3>Participants</h3>
+        <textarea id="participants" placeholder="Liste des participants..." readonly></textarea>
+      </div>
+      
+      <button id="editBtn" onclick="modifierMontant()" style="display: none;">✏️</button>
+    </div>
+
+    
+  </div>
+
+  <!-- Pop-up -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <span class="close" onclick="fermerPopup()">×</span>
+      <h2>Participer à la cagnotte</h2>
+      <div class="paiement">
+        <div>
+          <h3>Via PayPal</h3>
+          <img src="paypal-qr.png" alt="QR Code PayPal" class="qr">
+        </div>
+        <div>
+          <h3>Ou via Wero</h3>
+          <p>
+            📱 <span id="numero">06 12 34 56 78</span>
+            <button class="copy-button" onclick="copierNumero()">Copier</button>
+          </p>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*************/
+    /*** JAVA ***/
+    /*************/
+    const OBJECTIF = 350;
+    function mettreAJourProgressBar(montant) {
+      const OBJECTIF = 500; // ou la valeur que tu veux
+      const pourcentage = Math.min((parseFloat(montant) / OBJECTIF) * 100, 100);
+      document.getElementById("progress-bar").style.width = pourcentage + "%";
+    }
+
+    // Afficher le montant sauvegardé au chargement
+    window.onload = function () {
+      const saved = localStorage.getItem("montantCagnotte");
+      if (saved) {
+        document.getElementById("montant").value = saved;
+        mettreAJourProgressBar(saved);
+      }
+
+      const participants = localStorage.getItem("listeParticipants");
+      if (participants) {
+        document.getElementById("participants").value = participants;
+      }
+  
+      const adminActif = sessionStorage.getItem("adminConnecte");
+      if (adminActif === "true") {
+        document.getElementById("editBtn").style.display = "inline-block";
+        document.getElementById("logoutBtn").style.display = "inline-block";
+        document.getElementById("participants").removeAttribute("readonly");
+      }
+      else {
+        document.getElementById("participants").setAttribute("readonly", true);
+      }
+    };
+  
+    function afficherPopup() {
+      document.getElementById("popup").style.display = "flex";
+    }
+  
+    function fermerPopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+  
+    function modifierMontant() {
+      const montantInput = document.getElementById("montant");
+      const nouveau = prompt("Nouveau montant de la cagnotte :", montantInput.value);
+      if (nouveau !== null && nouveau.trim() !== "") {
+        montantInput.value = nouveau;
+        localStorage.setItem("montantCagnotte", nouveau); // 💾 Sauvegarde
+        mettreAJourProgressBar(nouveau);
+      }
+    }
+  
+    function afficherAdmin() {
+      const motDePasse = prompt("Mot de passe admin :");
+      if (motDePasse === "anniv2025") {
+        sessionStorage.setItem("adminConnecte", "true");
+        document.getElementById("editBtn").style.display = "inline-block";
+        document.getElementById("logoutBtn").style.display = "inline-block";
+        document.getElementById("participants").removeAttribute("readonly");
+      } else {
+        alert("Mot de passe incorrect.");
+      }
+    }
+
+
+    function deconnexionAdmin() {
+      sessionStorage.removeItem("adminConnecte");
+      document.getElementById("editBtn").style.display = "none";
+      document.getElementById("logoutBtn").style.display = "none";
+      document.getElementById("participants").setAttribute("readonly", true);
+      alert("Déconnecté de l'admin.");
+    }
+
+    document.getElementById("participants")?.addEventListener("input", function () {
+      if (!this.hasAttribute("readonly")) {
+        localStorage.setItem("listeParticipants", this.value);
+      }
+    });
+
+    function copierNumero() {
+      const numero = document.getElementById("numero").innerText;
+      const textarea = document.createElement("textarea");
+      textarea.value = numero;
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand("copy");
+        alert("Numéro copié !");
+      } catch (err) {
+        alert("La copie a échoué.");
+      }
+      document.body.removeChild(textarea);
+    }
+  </script>
+  
+</body>
+</html>
