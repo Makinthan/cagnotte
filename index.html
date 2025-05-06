@@ -26,7 +26,7 @@
 </script>
 
 <!-- Ton script principal -->
-<script src="script.js"></script>
+<!--<script src="script.js"></script>-->
 
 <body>
   <div class="container">
@@ -56,8 +56,6 @@
         <h3>Participants</h3>
         <textarea id="participants" placeholder="Liste des participants..." readonly></textarea>
       </div>
-      
-      <button id="editBtn" onclick="modifierMontant()" style="display: none;">✏️</button>
     </div>
 
     
@@ -99,16 +97,28 @@
 
     // Afficher le montant sauvegardé au chargement
     window.onload = function () {
-      const saved = localStorage.getItem("montantCagnotte");
-      if (saved) {
-        document.getElementById("montant").value = saved;
-        mettreAJourProgressBar(saved);
-      }
+      firebase.database().ref("montant").on("value", (snapshot) => {
+        const montant = snapshot.val();
+        if (montant !== null) {
+          document.getElementById("montant").textContent = montant + " €";
+          mettreAJourProgressBar(montant);
+        }
+      });
 
-      const participants = localStorage.getItem("listeParticipants");
-      if (participants) {
-        document.getElementById("participants").value = participants;
-      }
+
+      firebase.database().ref("participants").on("value", (snapshot) => {
+        const data = snapshot.val();
+        const participantsElem = document.getElementById("participants");
+        participantsElem.innerHTML = "";
+        if (Array.isArray(data)) {
+          data.forEach((nom) => {
+            const li = document.createElement("li");
+            li.textContent = nom;
+            participantsElem.appendChild(li);
+          });
+        }
+      });
+
   
       const adminActif = sessionStorage.getItem("adminConnecte");
       if (adminActif === "true") {
@@ -134,7 +144,8 @@
       const nouveau = prompt("Nouveau montant de la cagnotte :", montantInput.value);
       if (nouveau !== null && nouveau.trim() !== "") {
         montantInput.value = nouveau;
-        localStorage.setItem("montantCagnotte", nouveau); // 💾 Sauvegarde
+        //localStorage.setItem("montantCagnotte", nouveau); // 💾 Sauvegarde
+        firebase.database().ref("montant").set(nouveau);// 💾 Sauvegarde
         mettreAJourProgressBar(nouveau);
       }
     }
@@ -162,7 +173,8 @@
 
     document.getElementById("participants")?.addEventListener("input", function () {
       if (!this.hasAttribute("readonly")) {
-        localStorage.setItem("listeParticipants", this.value);
+        //localStorage.setItem("listeParticipants", this.value);
+        firebase.database().ref("participants").set(this.value.split('\n'));
       }
     });
 
