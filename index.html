@@ -5,6 +5,30 @@
   <title>Cagnotte Anniversaire</title>
   <link rel="stylesheet" href="style.css">
 </head>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+
+<script>
+  // Ton code de configuration Firebase ici (remplace les valeurs !)
+  const firebaseConfig = {
+    apiKey: "TON_API_KEY",
+    authDomain: "TON_PROJET.firebaseapp.com",
+    databaseURL: "https://TON_PROJET.firebaseio.com",
+    projectId: "TON_PROJET",
+    storageBucket: "TON_PROJET.appspot.com",
+    messagingSenderId: "XXX",
+    appId: "XXX"
+  };
+
+  // Initialisation Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+</script>
+
+<!-- Ton script principal -->
+<script src="script.js"></script>
+
 <body>
   <div class="container">
     <button class="admin-btn" onclick="afficherAdmin()">🔑 Accès admin</button>
