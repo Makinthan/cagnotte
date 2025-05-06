@@ -23,19 +23,7 @@
   // Initialisation Firebase
   const app = firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
-
-  firebase.database().ref("montant").on("value", (snapshot) => {
-  const montant = snapshot.val();
-  if (montant !== null) {
-    document.getElementById("montant").textContent = montant + " €";
-    mettreAJourProgressBar(montant);
-  }
-});
-
 </script>
-
-<!-- Ton script principal -->
-<!--<script src="script.js"></script>-->
 
 <body>
   <div class="container">
@@ -97,143 +85,132 @@
     /*************/
     /*** JAVA ***/
     /*************/
-    const OBJECTIF = 350;
-    function mettreAJourProgressBar(montant) {
-      // const OBJECTIF = 500; // ou la valeur que tu veux
-      const pourcentage = Math.min((parseFloat(montant) / OBJECTIF) * 100, 100);
-      document.getElementById("progress-bar").style.width = pourcentage + "%";
-    }
+    // Constantes utiles
+const OBJECTIF = 350;
+const montantElem = document.getElementById("montant");
+const participantsElem = document.getElementById("participants");
+const descriptionElem = document.getElementById("description");
 
-    // Afficher le montant sauvegardé au chargement
-    window.onload = function () {
-      firebase.database().ref("montant").on("value", (snapshot) => {
-        const montant = snapshot.val();
-        console.log("Montant reçu depuis Firebase :", montant);
-        if (montant !== null) {
-          document.getElementById("montant").textContent = montant + " €";
-          mettreAJourProgressBar(montant);
-        }
-      });
+// METTRE À JOUR BARRE DE PROGRESSION
+function mettreAJourProgressBar(montant) {
+  const pourcentage = Math.min((parseFloat(montant) / OBJECTIF) * 100, 100);
+  document.getElementById("progress-bar").style.width = pourcentage + "%";
+}
 
+// MODIFIER LE MONTANT (admin uniquement)
+function modifierMontant() {
+  const nouveau = prompt("Nouveau montant de la cagnotte :");
+  if (nouveau !== null && nouveau.trim() !== "") {
+    firebase.database().ref("montant").set(nouveau);
+  }
+}
 
-      firebase.database().ref("participants").on("value", (snapshot) => {
-        const data = snapshot.val();
-        const participantsElem = document.getElementById("participants");
-        participantsElem.innerHTML = "";
-        if (Array.isArray(data)) {
-          data.forEach((nom) => {
-            const li = document.createElement("li");
-            li.textContent = nom;
-            participantsElem.appendChild(li);
-          });
-        }
-      });
+// AFFICHER ZONE ADMIN
+function afficherAdmin() {
+  const motDePasse = prompt("Mot de passe admin :");
+  if (motDePasse === "anniv2025") {
+    sessionStorage.setItem("adminConnecte", "true");
+    document.getElementById("editBtn").style.display = "inline-block";
+    document.getElementById("logoutBtn").style.display = "inline-block";
+    participantsElem.contentEditable = "true";
+    descriptionElem.contentEditable = "true";
+  } else {
+    alert("Mot de passe incorrect.");
+  }
+}
 
-  
-      const adminActif = sessionStorage.getItem("adminConnecte");
-      if (adminActif === "true") {
-        document.getElementById("editBtn").style.display = "inline-block";
-        document.getElementById("logoutBtn").style.display = "inline-block";
-        document.getElementById("participants").removeAttribute("readonly");
-      }
-      else {
-        document.getElementById("participants").setAttribute("readonly", true);
-      }
-    };
-  
-    function afficherPopup() {
-      document.getElementById("popup").style.display = "flex";
-    }
-  
-    function fermerPopup() {
-      document.getElementById("popup").style.display = "none";
-    }
-  
-    function modifierMontant() {
-      const montantInput = document.getElementById("montant");
-      const nouveau = prompt("Nouveau montant de la cagnotte :", montantInput.value);
-      if (nouveau !== null && nouveau.trim() !== "") {
-        montantInput.value = nouveau;
-        //localStorage.setItem("montantCagnotte", nouveau); // 💾 Sauvegarde
-        firebase.database().ref("montant").set(nouveau);// 💾 Sauvegarde
-        mettreAJourProgressBar(nouveau);
-      }
-    }
-  
-    function afficherAdmin() {
-      const motDePasse = prompt("Mot de passe admin :");
-      if (motDePasse === "anniv2025") {
-        sessionStorage.setItem("adminConnecte", "true");
-        document.getElementById("editBtn").style.display = "inline-block";
-        document.getElementById("logoutBtn").style.display = "inline-block";
-        document.getElementById("participants").removeAttribute("readonly");
-      } else {
-        alert("Mot de passe incorrect.");
-      }
-    }
+// DÉCONNEXION ADMIN
+function deconnexionAdmin() {
+  sessionStorage.removeItem("adminConnecte");
+  document.getElementById("editBtn").style.display = "none";
+  document.getElementById("logoutBtn").style.display = "none";
+  participantsElem.contentEditable = "false";
+  descriptionElem.contentEditable = "false";
+  alert("Déconnecté de l'admin.");
+}
 
+// ÉCOUTER LES CHANGEMENTS FIREBASE EN TEMPS RÉEL
+function ecouterFirebase() {
+  firebase.database().ref("montant").on("value", (snap) => {
+    const montant = snap.val();
+    montantElem.textContent = montant + " €";
+    mettreAJourProgressBar(montant);
+  });
 
-    function deconnexionAdmin() {
-      sessionStorage.removeItem("adminConnecte");
-      document.getElementById("editBtn").style.display = "none";
-      document.getElementById("logoutBtn").style.display = "none";
-      document.getElementById("participants").setAttribute("readonly", true);
-      alert("Déconnecté de l'admin.");
-    }
-
-    document.getElementById("participants")?.addEventListener("input", function () {
-      if (!this.hasAttribute("readonly")) {
-        //localStorage.setItem("listeParticipants", this.value);
-        firebase.database().ref("participants").set(this.value.split('\n'));
-      }
-    });
-
-    function copierNumero() {
-      const numero = document.getElementById("numero").innerText;
-      const textarea = document.createElement("textarea");
-      textarea.value = numero;
-      document.body.appendChild(textarea);
-      textarea.select();
-      try {
-        document.execCommand("copy");
-        alert("Numéro copié !");
-      } catch (err) {
-        alert("La copie a échoué.");
-      }
-      document.body.removeChild(textarea);
-    }
-    const montantElem = document.getElementById("montant");
-    const descriptionElem = document.getElementById("description");
-    const participantsElem = document.getElementById("participants");
-    
-    // Fonction de mise à jour depuis Firebase
-    function lireDonnees() {
-      const ref = firebase.database().ref("/");
-    
-      ref.on("value", (snapshot) => {
-        const data = snapshot.val();
-        if (!data) return;
-    
-        // Montant
-        montantElem.textContent = data.montant + " €";
-    
-        // Description
-        descriptionElem.textContent = data.description;
-    
-        // Participants
-        participantsElem.innerHTML = "";
-        if (Array.isArray(data.participants)) {
-          data.participants.forEach((nom) => {
-            const li = document.createElement("li");
-            li.textContent = nom;
-            participantsElem.appendChild(li);
-          });
-        }
+  firebase.database().ref("participants").on("value", (snap) => {
+    const data = snap.val();
+    participantsElem.innerHTML = "";
+    if (Array.isArray(data)) {
+      data.forEach(nom => {
+        const li = document.createElement("li");
+        li.textContent = nom;
+        participantsElem.appendChild(li);
       });
     }
-    
-    // Appeler la fonction au chargement
-    lireDonnees();
+  });
+
+  firebase.database().ref("description").on("value", (snap) => {
+    const texte = snap.val();
+    descriptionElem.textContent = texte;
+  });
+}
+
+// SAUVEGARDE DE PARTICIPANTS (admin uniquement)
+participantsElem.addEventListener("input", () => {
+  if (sessionStorage.getItem("adminConnecte") === "true") {
+    const noms = Array.from(participantsElem.querySelectorAll("li"))
+      .map(li => li.textContent.trim())
+      .filter(nom => nom !== "");
+    firebase.database().ref("participants").set(noms);
+  }
+});
+
+// SAUVEGARDE DE DESCRIPTION (admin uniquement)
+descriptionElem.addEventListener("input", () => {
+  if (sessionStorage.getItem("adminConnecte") === "true") {
+    firebase.database().ref("description").set(descriptionElem.textContent.trim());
+  }
+});
+
+// POPUP
+function afficherPopup() {
+  document.getElementById("popup").style.display = "flex";
+}
+function fermerPopup() {
+  document.getElementById("popup").style.display = "none";
+}
+
+// COPIER NUMÉRO
+function copierNumero() {
+  const numero = document.getElementById("numero").innerText;
+  const textarea = document.createElement("textarea");
+  textarea.value = numero;
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand("copy");
+    alert("Numéro copié !");
+  } catch (err) {
+    alert("Échec de la copie");
+  }
+  document.body.removeChild(textarea);
+}
+
+// INIT AU CHARGEMENT
+window.onload = function () {
+  ecouterFirebase();
+
+  const admin = sessionStorage.getItem("adminConnecte");
+  if (admin === "true") {
+    document.getElementById("editBtn").style.display = "inline-block";
+    document.getElementById("logoutBtn").style.display = "inline-block";
+    participantsElem.contentEditable = "true";
+    descriptionElem.contentEditable = "true";
+  } else {
+    participantsElem.contentEditable = "false";
+    descriptionElem.contentEditable = "false";
+  }
+};
 
   </script>
   
