@@ -181,6 +181,39 @@
       }
       document.body.removeChild(textarea);
     }
+    const montantElem = document.getElementById("montant");
+    const descriptionElem = document.getElementById("description");
+    const participantsElem = document.getElementById("participants");
+    
+    // Fonction de mise à jour depuis Firebase
+    function lireDonnees() {
+      const ref = firebase.database().ref("/");
+    
+      ref.on("value", (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
+    
+        // Montant
+        montantElem.textContent = data.montant + " €";
+    
+        // Description
+        descriptionElem.textContent = data.description;
+    
+        // Participants
+        participantsElem.innerHTML = "";
+        if (Array.isArray(data.participants)) {
+          data.participants.forEach((nom) => {
+            const li = document.createElement("li");
+            li.textContent = nom;
+            participantsElem.appendChild(li);
+          });
+        }
+      });
+    }
+    
+    // Appeler la fonction au chargement
+    lireDonnees();
+
   </script>
   
 </body>
