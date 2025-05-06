@@ -23,6 +23,15 @@
   // Initialisation Firebase
   const app = firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
+
+  firebase.database().ref("montant").on("value", (snapshot) => {
+  const montant = snapshot.val();
+  if (montant !== null) {
+    document.getElementById("montant").textContent = montant + " €";
+    mettreAJourProgressBar(montant);
+  }
+});
+
 </script>
 
 <!-- Ton script principal -->
@@ -99,6 +108,7 @@
     window.onload = function () {
       firebase.database().ref("montant").on("value", (snapshot) => {
         const montant = snapshot.val();
+        console.log("Montant reçu depuis Firebase :", montant);
         if (montant !== null) {
           document.getElementById("montant").textContent = montant + " €";
           mettreAJourProgressBar(montant);
