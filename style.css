@@ -11,14 +11,16 @@ a
     text-decoration: underline;
     color: blue;
 }
-a:visited
-{
-    text-decoration: underline;
-    color: blue;
-}
 
 #description {
   font-size: 1em;
+  color: #000000;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+#warning{
+  font-size: 0.8em;
   color: #000000;
   margin-top: 10px;
   margin-bottom: 30px;
@@ -224,6 +226,5 @@ a:visited
   border: 1px solid #ccc;
   cursor: default;
 }
-
 
 

@@ -2,16 +2,18 @@
 
 // Ton code de configuration Firebase ici (remplace les valeurs !)
 const firebaseConfig = {
-    apiKey: "AIzaSyC1ZycY0cYZiaz2O9MK7cvEwzFKbEqacIM",
-    authDomain: "cagnotte-anniversaire.firebaseapp.com",
-    projectId: "cagnotte-anniversaire",
-    storageBucket: "cagnotte-anniversaire.firebasestorage.app",
-    messagingSenderId: "184571650038",
-    appId: "1:184571650038:web:58817849bd1986bdfd71d7"
+  apiKey: "AIzaSyC1ZycY0cYZiaz2O9MK7cvEwzFKbEqacIM",
+  authDomain: "cagnotte-anniversaire.firebaseapp.com",
+  databaseURL: "https://cagnotte-anniversaire-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "cagnotte-anniversaire",
+  storageBucket: "cagnotte-anniversaire.firebasestorage.app",
+  messagingSenderId: "184571650038",
+  appId: "1:184571650038:web:58817849bd1986bdfd71d7"
 };
 
 // Initialisation Firebase
 const app = firebase.initializeApp(firebaseConfig);
+// Référence vers la base
 const db = firebase.database();
 
 const OBJECTIF = 350;
@@ -23,16 +25,30 @@ function mettreAJourProgressBar(montant) {
 
 // Afficher le montant sauvegardé au chargement
 window.onload = function () {
-    firebase.database().ref("montant").on("value", (snapshot) => {
-        const montant = snapshot.val();
-        if (montant !== null) {
-            document.getElementById("montant").textContent = montant + " €";
-            mettreAJourProgressBar(montant);
+    db.ref("/").on("value", (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        if (data.montant) {
+          document.getElementById("montant").value = data.montant;
+          mettreAJourProgressBar(data.montant);
         }
+        if (data.participants) {
+          document.getElementById("participants").value = data.participants;
+        }
+      }
+      const adminActif = sessionStorage.getItem("adminConnecte");
+      if (adminActif === "true") {
+        document.getElementById("editBtn").style.display = "inline-block";
+        document.getElementById("logoutBtn").style.display = "inline-block";
+        document.getElementById("participants").removeAttribute("readonly");
+      } else {
+        document.getElementById("participants").setAttribute("readonly", true);
+      }
     });
+  };
 
 
-    firebase.database().ref("participants").on("value", (snapshot) => {
+    db.ref("participants").on("value", (snapshot) => {
         const data = snapshot.val();
         const participantsElem = document.getElementById("participants");
         participantsElem.innerHTML = "";
@@ -46,16 +62,16 @@ window.onload = function () {
     });
 
 
-    const adminActif = sessionStorage.getItem("adminConnecte");
-    if (adminActif === "true") {
-        document.getElementById("editBtn").style.display = "inline-block";
-        document.getElementById("logoutBtn").style.display = "inline-block";
-        document.getElementById("participants").removeAttribute("readonly");
-    }
-    else {
-        document.getElementById("participants").setAttribute("readonly", true);
-    }
-};
+//     const adminActif = sessionStorage.getItem("adminConnecte");
+//     if (adminActif === "true") {
+//         document.getElementById("editBtn").style.display = "inline-block";
+//         document.getElementById("logoutBtn").style.display = "inline-block";
+//         document.getElementById("participants").removeAttribute("readonly");
+//     }
+//     else {
+//         document.getElementById("participants").setAttribute("readonly", true);
+//     }
+// };
 
 function afficherPopup() {
     document.getElementById("popup").style.display = "flex";
@@ -71,22 +87,23 @@ function modifierMontant() {
     if (nouveau !== null && nouveau.trim() !== "") {
         montantInput.value = nouveau;
         //localStorage.setItem("montantCagnotte", nouveau); // 💾 Sauvegarde
-        firebase.database().ref("montant").set(nouveau);// 💾 Sauvegarde
+        db.ref("montant").set(nouveau);// 💾 Sauvegarde dans Firebase
         mettreAJourProgressBar(nouveau);
     }
 }
-
+  
 function afficherAdmin() {
     const motDePasse = prompt("Mot de passe admin :");
     if (motDePasse === "anniv2025") {
-        sessionStorage.setItem("adminConnecte", "true");
-        document.getElementById("editBtn").style.display = "inline-block";
-        document.getElementById("logoutBtn").style.display = "inline-block";
-        document.getElementById("participants").removeAttribute("readonly");
+      sessionStorage.setItem("adminConnecte", "true");
+      document.getElementById("editBtn").style.display = "inline-block";
+      document.getElementById("logoutBtn").style.display = "inline-block";
+      document.getElementById("participants").removeAttribute("readonly");
     } else {
-        alert("Mot de passe incorrect.");
+      alert("Mot de passe incorrect.");
     }
-}
+  }
+  
 
 
 function deconnexionAdmin() {
@@ -99,10 +116,10 @@ function deconnexionAdmin() {
 
 document.getElementById("participants")?.addEventListener("input", function () {
     if (!this.hasAttribute("readonly")) {
-        //localStorage.setItem("listeParticipants", this.value);
-        firebase.database().ref("participants").set(this.value.split('\n'));
+      db.ref("/participants").set(this.value);
     }
-});
+  });
+  
 
 function copierNumero() {
     const numero = document.getElementById("numero").innerText;
@@ -124,7 +141,7 @@ const participantsElem = document.getElementById("participants");
 
 // Fonction de mise à jour depuis Firebase
 function lireDonnees() {
-    const ref = firebase.database().ref("/");
+    const ref = db.ref("/");
 
     ref.on("value", (snapshot) => {
         const data = snapshot.val();
