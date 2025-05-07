@@ -136,7 +136,7 @@ function copierNumero() {
     document.body.removeChild(textarea);
 }
 const montantElem = document.getElementById("montant");
-const descriptionElem = document.getElementById("description");
+const descriptionElem = document.getElementById("description").textContent;
 const participantsElem = document.getElementById("participants");
 
 // Fonction de mise à jour depuis Firebase

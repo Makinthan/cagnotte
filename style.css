@@ -13,11 +13,24 @@ a
 }
 
 #description {
-  font-size: 1em;
+  white-space: pre-wrap;       /* Respecte les retours à la ligne */
+  word-wrap: break-word;       /* Coupe les mots longs au besoin */
+  overflow-wrap: break-word;
+  font-size: 0.9em;
   color: #000000;
   margin-top: 10px;
   margin-bottom: 30px;
   text-align: center;
+}
+#PS{
+  white-space: pre-wrap;       /* Respecte les retours à la ligne */
+  word-wrap: break-word;       /* Coupe les mots longs au besoin */
+  overflow-wrap: break-word;
+  font-size: 0.7em;
+  color: #000000;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  text-align: left;
 }
 #warning{
   font-size: 0.8em;
