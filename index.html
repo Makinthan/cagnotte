@@ -18,16 +18,24 @@
       Vous pourrez suivre l'avancé de la cagnotte ici et la liste des participants (mp moi si problème)<br /><br />
       Merci à tous pour votre participation 😁</p>
     <p>Model du sac : <a  href = "https://www.bhv.fr/p/sac+a+main+hobo+courage+28+en+cuir-coach/10179578/60" target="_blank"> Sac COACH</a><br />
-    Couleur : Jaune (dispo seulement en boutique)</p>
-    <p id="PS">PS: si la cagnotte est atteinte il y a d'autre idée de Cadeaux 😜</p>
+    Couleur : <s>Jaune (dispo seulement en boutique)</s> Beige (elle connait pas ses couleurs)</p>
+    <p id="PS">PS: si la cagnotte est atteinte il y a d'autre idée de Cadeaux 😜<br />
+    <a href="https://www.smithandson.com/bookn/9781526617170-a-court-of-wings-and-ruin-the-third-book-in-the-globally-bestselling-sensational-series/" target="_blank">livre</a>, 
+    <a href="https://www.galerieslafayette.com/p/eau+de+parfum-le+labo/81209914/378" target="_blank">parfum</a>
+    et toute sorte de carte cadeaux</p>
     <h2>
       Montant récolté : <input id="montant" type="text" readonly> €
       <button id="editBtn" onclick="modifierMontant()" style="display: none;">✏️</button>
     </h2>
-   
+      <!-- Barre de progression -->
       <div id="progress-container">
         <div id="progress-bar"></div>
       </div>
+      <div id="bonus-container" style="display: none;">
+        <div id="bonus-bar"></div>
+      </div>
+      <p id="bonus-text" style="display: none;">Dépassement de l'objectif 🎉</p>
+      
       <p id="objectif-text">Objectif : 350 €</p>
       <button class="participer" onclick="afficherPopup()">🎁 Je participe</button>
       <!-- Zone de texte des participants -->

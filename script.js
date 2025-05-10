@@ -17,11 +17,38 @@ const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 const OBJECTIF = 350;
+// function mettreAJourProgressBar(montant) {
+//     // const OBJECTIF = 500; // ou la valeur que tu veux
+//     const pourcentage = Math.min((parseFloat(montant) / OBJECTIF) * 100, 100);
+//     document.getElementById("progress-bar").style.width = pourcentage + "%";
+// }
+
 function mettreAJourProgressBar(montant) {
-    // const OBJECTIF = 500; // ou la valeur que tu veux
-    const pourcentage = Math.min((parseFloat(montant) / OBJECTIF) * 100, 100);
-    document.getElementById("progress-bar").style.width = pourcentage + "%";
+  const montantNum = parseFloat(montant);
+  const objectif = 350;
+
+  const progressPercent = Math.min((montantNum / objectif) * 100, 100);
+  document.getElementById("progress-bar").style.width = progressPercent + "%";
+
+  // Gestion de la barre bonus
+  if (montantNum > objectif) {
+    const surplus = montantNum - objectif;
+    const bonusPercent = Math.min((surplus / objectif) * 100, 100);
+  
+    document.getElementById("bonus-container").style.display = "block";
+    document.getElementById("bonus-bar").style.width = bonusPercent + "%";
+  
+    const bonusText = `🎉 Dépassement de l'objectif : +${surplus} €`;
+    document.getElementById("bonus-text").style.display = "block";
+    document.getElementById("bonus-text").textContent = bonusText;
+  }
+  else {
+    document.getElementById("bonus-container").style.display = "none";
+    document.getElementById("bonus-text").style.display = "none";
+    document.getElementById("bonus-bar").style.width = "0%";
+  }
 }
+
 
 // Afficher le montant sauvegardé au chargement
 window.onload = function () {
