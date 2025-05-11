@@ -32,15 +32,31 @@ function mettreAJourProgressBar(montant) {
 
   // Gestion de la barre bonus
   if (montantNum > objectif) {
-    const surplus = montantNum - objectif;
+        const surplus = montantNum - objectif;
     const bonusPercent = Math.min((surplus / objectif) * 100, 100);
-  
+
+    const bonusBar = document.getElementById("bonus-bar");
+    const bonusTextElem = document.getElementById("bonus-text");
+
     document.getElementById("bonus-container").style.display = "block";
-    document.getElementById("bonus-bar").style.width = bonusPercent + "%";
-  
-    const bonusText = `🎉 Dépassement de l'objectif : +${surplus} €`;
-    document.getElementById("bonus-text").style.display = "block";
-    document.getElementById("bonus-text").textContent = bonusText;
+    bonusBar.style.width = bonusPercent + "%";
+    bonusTextElem.style.display = "block";
+
+    // Dynamiser couleur et texte selon le montant
+    let color = "#ff9800"; // par défaut
+    let texte = `🎉 Dépassement de l'objectif : +${surplus} €`;
+
+    if (surplus > 100) {
+      color = "#9c27b0"; // violet
+      texte = `🚀 Incroyable : +${surplus} € collectés !`;
+    } else if (surplus > 50) {
+      color = "#4caf50"; // vert clair
+      texte = `🥳 +${surplus} € de générosité !`;
+    }
+
+    bonusBar.style.backgroundColor = color;
+    bonusTextElem.style.color = color;
+    bonusTextElem.textContent = texte;
   }
   else {
     document.getElementById("bonus-container").style.display = "none";
